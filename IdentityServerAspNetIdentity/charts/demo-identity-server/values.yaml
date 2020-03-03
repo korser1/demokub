@@ -1,0 +1,77 @@
+# Default values for demo-identity-server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+fullnameOverride: demo-identity-server
+replicaCount: 1
+image:
+  repository: localhost:5000/demo-identity-server
+  tag: first
+  pullPolicy: Always
+imagePullSecrets: []
+  # Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  #
+  # This uses credentials from secret "myRegistryKeySecretName".
+  # - name: myRegistryKeySecretName
+service:
+  type: ClusterIP
+  port: 8085
+
+env:
+  - name: "clientid"
+    value: "mvc"
+  - name: "clientsecret"
+    value: "secret"
+  - name: "scope"
+    value: "api1"
+  - name: "redirects__0"
+    value: "http://api.demo.ebt.com/swagger/oauth2-redirect.html"
+  - name : "redirects__1"
+    value: "http://mobile.demo.ebt.com/oauth2-redirect.html"
+  - name: "callbacks__0"
+    value: "https://api.demo.ebt.com/signout-callback-oidc"
+
+probes:
+  enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - ids.demo.ebt.com
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+secrets: {}
+  # Optionally specify a set of secret objects whose values
+  # will be injected as environment variables by default.
+  # You should add this section to a file like secrets.yaml
+  # that is explicitly NOT committed to source code control
+  # and then include it as part of your helm install step.
+  # ref: https://kubernetes.io/docs/concepts/configuration/secret/
+  #
+  # This creates a secret "mysecret" and injects "mypassword"
+  # as the environment variable mysecret_mypassword=password.
+  # mysecret:
+  #   mypassword: password
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
