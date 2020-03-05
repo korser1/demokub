@@ -6,10 +6,13 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
@@ -114,6 +117,7 @@ namespace WebApi
             });
 
             services.AddAuthorization();
+            services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
             services.AddMvc();
         }
 
@@ -153,6 +157,7 @@ namespace WebApi
                 c.SwaggerEndpoint($"/swagger/v1/swagger.json", $"Web Api v1");
             });
 
+            app.UseHealthChecks(new PathString("/healthz"), new HealthCheckOptions {AllowCachingResponses = false});
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

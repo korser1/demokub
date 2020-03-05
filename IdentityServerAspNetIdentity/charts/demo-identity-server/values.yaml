@@ -32,9 +32,6 @@ env:
   - name: "callbacks__0"
     value: "https://api.demo.ebt.com/signout-callback-oidc"
 
-probes:
-  enabled: false
-
 ingress:
   enabled: true
   annotations:

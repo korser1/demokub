@@ -29,18 +29,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8085
+              containerPort: 80
               protocol: TCP
-          {{- if .Values.probes.enabled }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
           readinessProbe:
             httpGet:
-              path: /
-              port: http
-          {{- end }}
+              path: /healthz
+              port: 8081
           env:
 {{ toYaml .Values.env | indent 12 }}
             {{- $root := . }}

@@ -31,10 +31,6 @@ env:
     value: "secret"
   - name: "scope"
     value: "api1"
-
-probes:
-  enabled: false
-
 ingress:
   enabled: true
   annotations:

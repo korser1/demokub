@@ -5,11 +5,14 @@
 using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 
 namespace IdentityServerAspNetIdentity
@@ -61,6 +64,7 @@ namespace IdentityServerAspNetIdentity
             builder.AddDeveloperSigningCredential();
 
             services.AddAuthentication();
+            services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
         }
 
         public void Configure(IApplicationBuilder app)
@@ -77,6 +81,7 @@ namespace IdentityServerAspNetIdentity
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
+            app.UseHealthChecks(new PathString("/healthz"), new HealthCheckOptions {AllowCachingResponses = false});
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
