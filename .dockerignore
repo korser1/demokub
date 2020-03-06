@@ -23,3 +23,5 @@
 **/Client
 **/Client/dist
 **/Client/node_modules
+**/*.db
+**/tempkey.rsa

@@ -14,6 +14,6 @@ COPY . .
 WORKDIR "/src/IdentityServerAspNetIdentity"
 RUN dotnet build --no-restore "IdentityServerAspNetIdentity.csproj" -c $BUILD_CONFIGURATION
 
-RUN echo "exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
+RUN echo "exec dotnet run --no-build /seed --no-launch-profile -c $BUILD_CONFIGURATION -- & exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

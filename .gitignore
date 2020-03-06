@@ -4,3 +4,5 @@ Client/dist/
 bin/
 obj/
 /packages/
+*.db
+tempkey.rsa
