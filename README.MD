@@ -15,6 +15,6 @@ Demo solution to demonstrate how to develop .Net Core applications and use them 
 
 Solution content:
 
-	API: WebApi + Entities + Persistence
+	API: WebApi + Persistence
 	Identity Server: IdentityServerAspNetIdentity
 	Angular client: Client

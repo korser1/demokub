@@ -35,6 +35,9 @@ spec:
             httpGet:
               path: /healthz
               port: http
+          volumeMounts:
+            - name: {{ template "demo-web-api.name" . }}-persistent-storage
+              mountPath: /mnt/storage
           env:
 {{ toYaml .Values.env | indent 12 }}
             {{- $root := . }}
@@ -49,6 +52,10 @@ spec:
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: {{ template "demo-web-api.name" . }}-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ template "demo-web-api.name" . }}-pv-claim
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml . | indent 8 }}

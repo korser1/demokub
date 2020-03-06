@@ -22,23 +22,39 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace WebApi
 {
+    /// <summary>
+    /// Startup class.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Configuration interface.
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppConfiguration>(Configuration);
             AppConfiguration config = Configuration.Get<AppConfiguration>();
 
             services.AddDbContext<DemoDbContext>(opt =>
-                opt.UseInMemoryDatabase("DemoList"));
+            {
+                opt.EnableDetailedErrors().EnableSensitiveDataLogging();
+                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
             services.AddControllers();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -121,13 +137,21 @@ namespace WebApi
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppConfiguration> appConfigurationOptions)
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="appConfigurationOptions"></param>
+        /// <param name="dbContext"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IOptions<AppConfiguration> appConfigurationOptions, DemoDbContext dbContext)
         {
             var config = appConfigurationOptions.Value;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                dbContext.Database.EnsureCreated();
             }
 
             app.UseStaticFiles();

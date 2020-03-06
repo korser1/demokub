@@ -21,7 +21,8 @@
         "audience": "api1",
         "clientid": "mvc",
         "clientsecret": "secret",
-        "scope": "api1"
+        "scope": "api1",
+        "connectionStrings__defaultConnection": "Data Source=WeatherDb.db;"
       }
     }
   }

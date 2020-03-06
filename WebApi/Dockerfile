@@ -8,7 +8,6 @@ EXPOSE 80
 WORKDIR /src
 ENV NUGET_PACKAGES=/src/packages
 COPY ["WebApi/WebApi.csproj", "WebApi/"]
-COPY ["Entities/Entities.csproj", "Entities/"]
 COPY ["Persistence/Persistence.csproj", "Persistence/"]
 
 RUN dotnet restore "WebApi/WebApi.csproj"

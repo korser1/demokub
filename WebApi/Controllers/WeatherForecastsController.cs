@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Entities;
 using Microsoft.AspNetCore.Authorization;
 using Persistence;
+using WeatherForecast = Persistence.WeatherForecast;
 
 namespace WebApi.Controllers
 {

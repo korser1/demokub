@@ -31,6 +31,9 @@ env:
     value: "secret"
   - name: "scope"
     value: "api1"
+  - name: "connectionStrings__defaultConnection"
+    value: "Data Source=/mnt/storage/WeatherDb.db;"
+
 ingress:
   enabled: true
   annotations:
