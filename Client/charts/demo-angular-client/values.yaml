@@ -19,16 +19,16 @@ service:
   port: 8086
 
 env:
-  - name: "authority"
-    value: "http://demo-identity-server.default.svc.cluster.local:8085"
+  - name: "apiserver"
+    value: "http://api.demo.ebt.com"
   - name: "identityserver"
     value: "http://ids.demo.ebt.com"
+  - name: "origin"
+    value: "http://client.demo.ebt.com"
   - name: "audience"
     value: "api1"
   - name: "clientid"
     value: "mvc"
-  - name: "clientsecret"
-    value: "secret"
   - name: "scope"
     value: "api1"
 

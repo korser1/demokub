@@ -1,0 +1,7 @@
+{
+  "identityServer": "http://localhost:5010",
+  "apiServer": "https://localhost:5001",
+  "originUrl": "http://localhost:4200",
+  "clientid": "mvc",
+  "scope": "api1"
+}

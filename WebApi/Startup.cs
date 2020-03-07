@@ -49,6 +49,12 @@ namespace WebApi
         {
             services.Configure<AppConfiguration>(Configuration);
             AppConfiguration config = Configuration.Get<AppConfiguration>();
+            
+            services.AddCors(o => o
+                .AddDefaultPolicy(b => b
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()));
 
             services.AddDbContext<DemoDbContext>(opt =>
             {
@@ -150,7 +156,9 @@ namespace WebApi
             var config = appConfigurationOptions.Value;
             if (env.IsDevelopment())
             {
+                app.UseCors();
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
                 dbContext.Database.EnsureCreated();
             }
 
@@ -173,7 +181,6 @@ namespace WebApi
                 c.OAuthConfigObject = new OAuthConfigObject
                 {
                     ClientId = config.ClientId,
-                    ClientSecret = config.ClientSecret,
                     AppName = "Swagger UI",
                     UsePkceWithAuthorizationCodeGrant = true
                 };

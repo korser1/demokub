@@ -41,7 +41,7 @@ namespace IdentityServerAspNetIdentity
                 new Client
                 {
                     ClientId = config.ClientId,
-                    ClientSecrets = { new Secret(config.ClientSecret.Sha256()) },
+                    RequireClientSecret = false,
 
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireConsent = false,

@@ -1,0 +1,8 @@
+{
+  "identityServer": "$identityserver",
+  "apiServer": "$apiserver",
+  "originUrl": "$origin",
+  "clientid": "$clientid",
+  "scope": "$scope"
+}
+

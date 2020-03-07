@@ -21,6 +21,7 @@ namespace WebApi.Controllers
         }
 
         // GET: api/WeatherForecasts
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherForecasts()
         {

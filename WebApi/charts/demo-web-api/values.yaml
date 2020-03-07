@@ -27,8 +27,6 @@ env:
     value: "api1"
   - name: "clientid"
     value: "mvc"
-  - name: "clientsecret"
-    value: "secret"
   - name: "scope"
     value: "api1"
   - name: "connectionStrings__defaultConnection"

@@ -28,9 +28,11 @@ env:
   - name: "redirects__0"
     value: "http://api.demo.ebt.com/swagger/oauth2-redirect.html"
   - name: "redirects__1"
-    value: "http://mobile.demo.ebt.com/oauth2-redirect.html"
+    value: "http://client.demo.ebt.com/callback"
   - name: "callbacks__0"
     value: "https://api.demo.ebt.com/signout-callback-oidc"
+  - name: "callbacks__1"
+    value: "http://client.demo.ebt.com/callback"
   - name: "connectionStrings__defaultConnection"
     value: "Data Source=AspIdUsers.db;"
 
