@@ -2,7 +2,7 @@ Demo solution to demonstrate how to develop .Net Core applications and use them 
 
 
 1. install docker-desktop https://www.docker.com/products/docker-desktop
-2. install helm https://helm.sh/
+2. install helm 3 https://helm.sh/
 3. run scripts from Init folder
 4. build images docker-build.bat
 5. install helm charts (run bat files from WebApi/charts, IdentityServerAspNetIdentity/charts, Client/charts)
