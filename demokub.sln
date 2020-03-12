@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerAspNetIdentity", "IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj", "{21037D77-C690-47FD-93E6-478264715FED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile", "Mobile\Mobile.csproj", "{82F89CDC-7C31-4026-A7CA-BA3B82261D2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{21037D77-C690-47FD-93E6-478264715FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21037D77-C690-47FD-93E6-478264715FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21037D77-C690-47FD-93E6-478264715FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82F89CDC-7C31-4026-A7CA-BA3B82261D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82F89CDC-7C31-4026-A7CA-BA3B82261D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82F89CDC-7C31-4026-A7CA-BA3B82261D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82F89CDC-7C31-4026-A7CA-BA3B82261D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

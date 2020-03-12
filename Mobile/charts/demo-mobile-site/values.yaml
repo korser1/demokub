@@ -1,10 +1,10 @@
-# Default values for demo-identity-server.
+# Default values for demo-mobile-site.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-fullnameOverride: demo-identity-server
+fullnameOverride: demo-mobile-site
 replicaCount: 1
 image:
-  repository: localhost:5000/demo-identity-server
+  repository: localhost:5000/demo-mobile-site
   tag: first
   pullPolicy: Always
 imagePullSecrets: []
@@ -16,29 +16,19 @@ imagePullSecrets: []
   # - name: myRegistryKeySecretName
 service:
   type: ClusterIP
-  port: 8085
+  port: 8086
 
 env:
+  - name: "authority"
+    value: "http://demo-identity-server.default.svc.cluster.local:8085"
+  - name: "identityserver"
+    value: "http://ids.demo.ebt.com"
+  - name: "audience"
+    value: "api1"
   - name: "clientid"
     value: "mvc"
-  - name: "clientsecret"
-    value: "secret"
   - name: "scope"
     value: "api1"
-  - name: "redirects__0"
-    value: "http://api.demo.ebt.com/swagger/oauth2-redirect.html"
-  - name: "redirects__1"
-    value: "http://client.demo.ebt.com/callback"
-  - name: "redirects__2"
-    value: "http://mobile.demo.ebt.com/signin-oidc"
-  - name: "callbacks__0"
-    value: "https://api.demo.ebt.com/signout-callback-oidc"
-  - name: "callbacks__1"
-    value: "http://client.demo.ebt.com/callback"
-  - name: "callbacks__2"
-    value: "http://mobile.demo.ebt.com/signin-oidc"
-  - name: "connectionStrings__defaultConnection"
-    value: "Data Source=AspIdUsers.db;"
 
 ingress:
   enabled: true
@@ -47,7 +37,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
-    - ids.demo.ebt.com
+    - mobile.demo.ebt.com
   tls: []
     # - secretName: chart-example-tls
     #   hosts:

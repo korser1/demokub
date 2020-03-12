@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "demo-mobile-site.fullname" . }}
+  labels:
+    app: {{ template "demo-mobile-site.name" . }}
+    chart: {{ template "demo-mobile-site.chart" . }}
+    draft: {{ default "draft-app" .Values.draft }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "demo-mobile-site.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "demo-mobile-site.name" . }}
+        draft: {{ default "draft-app" .Values.draft }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          env:
+{{ toYaml .Values.env | indent 12 }}
+            {{- $root := . }}
+            {{- range $ref, $values := .Values.secrets }}
+            {{- range $key, $value := $values }}
+            - name: {{ $ref }}_{{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo-mobile-site.fullname" $root }}-{{ $ref | lower }}
+                  key: {{ $key }}
+            {{- end }}
+            {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "0.1"
+description: Demo Mobile site Helm chart for Kubernetes
+name: demo-mobile-site
+version: 0.1.0

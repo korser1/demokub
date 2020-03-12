@@ -1,17 +1,11 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using System;
-using System.Linq;
 
-namespace IdentityServerAspNetIdentity
+namespace Mobile
 {
     public class Program
     {
@@ -22,7 +16,7 @@ namespace IdentityServerAspNetIdentity
                 .Enrich.FromLogContext()
                 // uncomment to write to Azure diagnostics stream
                 //.WriteTo.File(
-                //    @"D:\home\LogFiles\Application\identityserver.txt",
+                //    @"D:\home\LogFiles\Application\mobilesite.txt",
                 //    fileSizeLimitBytes: 1_000_000,
                 //    rollOnFileSizeLimit: true,
                 //    shared: true,
@@ -32,23 +26,7 @@ namespace IdentityServerAspNetIdentity
 
             try
             {
-                var seed = args.Contains("/seed");
-                if (seed)
-                {
-                    args = args.Except(new[] { "/seed" }).ToArray();
-                }
-
                 var host = CreateHostBuilder(args).Build();
-
-                if (seed)
-                {
-                    Log.Information("Seeding database...");
-                    var config = host.Services.GetRequiredService<IConfiguration>();
-                    var connectionString = config.GetConnectionString("DefaultConnection");
-                    SeedData.EnsureSeedData(connectionString);
-                    Log.Information("Done seeding database.");
-                    return 0;
-                }
 
                 Log.Information("Starting host...");
                 host.Run();
@@ -69,10 +47,11 @@ namespace IdentityServerAspNetIdentity
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
-                    webBuilder.ConfigureAppConfiguration(c =>
-                        c.AddEnvironmentVariables().AddCommandLine(args));
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureAppConfiguration(c => 
+                        c.AddEnvironmentVariables().AddCommandLine(args)
+                    );
                 });
     }
 }
