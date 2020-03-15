@@ -38,10 +38,10 @@ else
 }
 
 @code {
-    private WeatherForecast[] _forecasts;
+    private List<WeatherForecast> _forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        _forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        _forecasts = await ForecastService.GetForecastAsync();
     }
 }

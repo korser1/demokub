@@ -10,7 +10,7 @@ ENV NUGET_PACKAGES=/src/packages
 COPY ["IdentityServerAspNetIdentity/IdentityServerAspNetIdentity.csproj", "IdentityServerAspNetIdentity/"]
 
 RUN dotnet restore "IdentityServerAspNetIdentity/IdentityServerAspNetIdentity.csproj"
-COPY . .
+COPY IdentityServerAspNetIdentity/. IdentityServerAspNetIdentity/
 WORKDIR "/src/IdentityServerAspNetIdentity"
 RUN dotnet build --no-restore "IdentityServerAspNetIdentity.csproj" -c $BUILD_CONFIGURATION
 

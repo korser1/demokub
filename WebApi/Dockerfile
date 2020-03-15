@@ -11,7 +11,8 @@ COPY ["WebApi/WebApi.csproj", "WebApi/"]
 COPY ["Persistence/Persistence.csproj", "Persistence/"]
 
 RUN dotnet restore "WebApi/WebApi.csproj"
-COPY . .
+COPY WebApi/. WebApi/
+COPY Persistence/. Persistence/
 WORKDIR "/src/WebApi"
 RUN dotnet build --no-restore "WebApi.csproj" -c $BUILD_CONFIGURATION
 

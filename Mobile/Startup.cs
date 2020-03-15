@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mobile.Data;
 
@@ -54,11 +55,14 @@ namespace Mobile
                 .AddCookie()
                 .AddOpenIdConnect(Constants.OpenIdScheme, options =>
                 {
-                    IdentityModelEventSource.ShowPII = true;
+                    options.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                        config.Authority + config.OpenIdConfigurationEndpoint,
+                        new InternalOpenIdConnectConfigurationRetriever(config));
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
                     options.Authority = config.IdentityServer;
-
+                    options.UseTokenLifetime = true;
+                    
                     options.ClientId = config.ClientId;
                     options.ClientSecret = config.ClientSecret;
                     options.RequireHttpsMetadata = false;
@@ -74,6 +78,9 @@ namespace Mobile
 
                     options.CallbackPath = new PathString("/signin-" + Constants.OpenIdScheme);
 
+                    IdentityModelEventSource.ShowPII = true;
+                    options.SaveTokens = true;
+
                     options.Events = new OpenIdConnectEvents
                     {
                         // handle the logout redirection
@@ -88,6 +95,7 @@ namespace Mobile
                 });
 
             services.AddHttpContextAccessor();
+            services.AddHttpClient();
             services.AddAuthorization();
 
             services.AddRazorPages();

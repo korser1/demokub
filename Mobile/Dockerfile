@@ -10,7 +10,7 @@ ENV NUGET_PACKAGES=/src/packages
 COPY ["Mobile/Mobile.csproj", "Mobile/"]
 
 RUN dotnet restore "Mobile/Mobile.csproj"
-COPY . .
+COPY Mobile/. Mobile/
 WORKDIR "/src/Mobile"
 RUN dotnet build --no-restore "Mobile.csproj" -c $BUILD_CONFIGURATION
 

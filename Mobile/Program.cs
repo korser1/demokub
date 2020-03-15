@@ -49,7 +49,7 @@ namespace Mobile
                 {
                     webBuilder.UseSerilog();
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.ConfigureAppConfiguration(c => 
+                    webBuilder.ConfigureAppConfiguration(c =>
                         c.AddEnvironmentVariables().AddCommandLine(args)
                     );
                 });

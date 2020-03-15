@@ -1,19 +1,49 @@
 ﻿namespace Mobile
 {
+    /// <summary>
+    /// Application configuration class.
+    /// </summary>
     public class AppConfiguration
     {
         /// <summary>
-        /// internal path to identity
+        /// Internal path to identity.
         /// </summary>
         public string Authority { get; set; }
         
         /// <summary>
-        /// public path to identity
+        /// Public path to identity.
         /// </summary>
         public string IdentityServer { get; set; }
-        public string Audience { get; set; }
+
+        /// <summary>
+        /// OpenId configuration endpoint.
+        /// </summary>
+        public string OpenIdConfigurationEndpoint { get; set; }
+
+        /// <summary>
+        /// Authorization endpoint.
+        /// </summary>
+        public string AuthorizationEndpoint { get; set; }
+
+        /// <summary>
+        /// Client Id.
+        /// </summary>
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// Client Secret.
+        /// </summary>
         public string ClientSecret { get; set; }
+
+        /// <summary>
+        /// Web API Scope.
+        /// </summary>
         public string Scope { get; set; }
+        
+        /// <summary>
+        /// API Endpoint. 
+        /// </summary>
+        public string ApiWeatherForecastsUrl { get; set; }
+
     }
 }

@@ -1,4 +1,6 @@
-FROM node:alpine as builder
+FROM node:alpine3.11 as builder
+
+RUN apk update && apk add python make g++
 
 COPY package.json package-lock.json ./
 
