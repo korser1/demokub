@@ -31,6 +31,21 @@
         public string Scope { get; set; }
 
         /// <summary>
+        /// Path to ssl certificate.
+        /// </summary>
+        public string CertificatePath { get; set; }
+
+        /// <summary>
+        /// Certificate password.
+        /// </summary>
+        public string Certificate_Password { get; set; }
+
+        /// <summary>
+        /// Data protection keys.
+        /// </summary>
+        public string DataProtectionKeys { get; set; }
+
+        /// <summary>
         /// Audience.
         /// </summary>
         public string Audience { get; set; }

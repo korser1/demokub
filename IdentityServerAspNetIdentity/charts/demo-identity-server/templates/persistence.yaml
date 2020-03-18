@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "demo-identity-server.name" . }}-pv-claim
+  labels:
+    app: {{ template "demo-identity-server.name" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 16Mi

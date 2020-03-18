@@ -2,9 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
 using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServerAspNetIdentity
 {
@@ -44,8 +52,14 @@ namespace IdentityServerAspNetIdentity
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.EnableDetailedErrors().EnableSensitiveDataLogging();
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            if (!string.IsNullOrEmpty(config.DataProtectionKeys))
+            {
+                var directory = new DirectoryInfo(config.DataProtectionKeys);
+                services.AddDataProtection().PersistKeysToFileSystem(directory);
+            }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -55,33 +69,49 @@ namespace IdentityServerAspNetIdentity
             {
                 options.MinimumSameSitePolicy = SameSiteMode.Lax;
             });
+
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             var builder = services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
-
-                    // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
-                    options.EmitStaticAudienceClaim = true;
                 })
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiScopes(Config.Scopes(config))
-                .AddInMemoryApiResources(Config.Apis(config))
-                .AddInMemoryClients(Config.Clients(config))
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
                 .AddAspNetIdentity<ApplicationUser>();
 
-            // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            if (!string.IsNullOrEmpty(config.CertificatePath))
+            {
+                X509Certificate2 certificate = new X509Certificate2(config.CertificatePath, config.Certificate_Password);
+                builder.AddSigningCredential(certificate);
+            }
+            else
+            {
+                builder.AddDeveloperSigningCredential();
+                services.AddDatabaseDeveloperPageExceptionFilter();
+            }
 
+            services.AddAuthentication();
+            services.AddAuthorization();
             services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IOptions<AppConfiguration> config)
         {
             if (Environment.IsDevelopment())
             {
+                InitializeDatabase(app, config.Value);
                 app.UseCors();
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
@@ -98,6 +128,55 @@ namespace IdentityServerAspNetIdentity
             {
                 endpoints.MapDefaultControllerRoute();
             });
+        }
+
+        private void InitializeDatabase(IApplicationBuilder app, AppConfiguration config)
+        {
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+            serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+            var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            context.Database.Migrate();
+            if (!context.Clients.Any())
+            {
+                foreach (var client in Config.Clients(config))
+                {
+                    context.Clients.Add(client.ToEntity());
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.IdentityResources.Any())
+            {
+                foreach (var resource in Config.IdentityResources)
+                {
+                    context.IdentityResources.Add(resource.ToEntity());
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.ApiResources.Any())
+            {
+                foreach (var resource in Config.Apis(config))
+                {
+                    context.ApiResources.Add(resource.ToEntity());
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.ApiScopes.Any())
+            {
+                foreach (var apiScope in Config.Scopes(config))
+                {
+                    context.ApiScopes.Add(apiScope.ToEntity());
+                }
+
+                context.SaveChanges();
+            }
         }
     }
 }

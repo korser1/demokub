@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 fullnameOverride: demo-identity-server
-replicaCount: 1
+replicaCount: 3
 image:
   repository: localhost:5000/demo-identity-server
   tag: first
@@ -29,7 +29,21 @@ env:
   callbacks__0: "https://api.demo.ebt.com/signout-callback-oidc"
   callbacks__1: "http://client.demo.ebt.com/callback"
   callbacks__2: "http://mobile.demo.ebt.com/signin-oidc"
-  connectionStrings__defaultConnection: "Data Source=AspIdUsers.db;"
+  dataProtectionKeys: "/mnt/dataprotection"
+  certificatePath: "/mnt/certs/jwtcert.pfx"
+
+mssql:
+  enabled: true
+
+mssql-linux:
+  fullnameOverride: demo-mssql-server
+  replicaCount: 1
+  acceptEula:
+    value: "Y"
+  edition:
+    value: "Express"
+  existingSecret: "demo-identity-server-sql"
+  existingSecretKey: "sapassword"
 
 ingress:
   enabled: true
@@ -43,7 +57,7 @@ ingress:
     # - secretName: chart-example-tls
     #   hosts:
     #     - chart-example.local
-secrets: {}
+secrets:
   # Optionally specify a set of secret objects whose values
   # will be injected as environment variables by default.
   # You should add this section to a file like secrets.yaml
@@ -55,6 +69,13 @@ secrets: {}
   # as the environment variable mysecret_mypassword=password.
   # mysecret:
   #   mypassword: password
+  sql:
+    sapassword: "sql-serPass123$"
+  connectionStrings:
+    _defaultConnection: "Server=demo-mssql-server.default.svc.cluster.local;Database=ApiDbUsers;User Id=sa;Password=sql-serPass123$;"
+  certificate:
+    password: "signCert&Pass123$"
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

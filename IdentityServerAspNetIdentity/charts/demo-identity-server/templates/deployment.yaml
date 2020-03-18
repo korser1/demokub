@@ -33,6 +33,11 @@ spec:
             httpGet:
               path: /healthz
               port: http
+          volumeMounts:
+            - name: {{ template "demo-identity-server.name" . }}-persistent-storage
+              mountPath: /mnt/certs
+            - name: {{ template "demo-identity-server.name" . }}-persistent-dp
+              mountPath: /mnt/dataprotection
           env:
             {{- $root := . }}
             {{- range $key, $value := .Values.env }}
@@ -50,6 +55,30 @@ spec:
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+      initContainers:
+        - name: install-certificate
+          image: alpine:3.11
+          imagePullPolicy: Always
+          command:
+          - sh
+          - -c
+          - apk add --update ca-certificates openssl && if [ -f {{ .Values.env.certificatePath }} ] ; then echo "cert file exists"; else cd /mnt/certs && openssl genrsa 2048 > private.pem && openssl req -x509 -days 365 -subj /CN=demo.ebt.com -new -key private.pem -out public.pem && openssl pkcs12 -export -in public.pem -inkey private.pem -out {{ .Values.env.certificatePath }} -password pass:${certificate_password}; fi
+          env:
+            - name: certificate_password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo-identity-server.fullname" $root }}-certificate
+                  key: password
+          volumeMounts:
+            - name: {{ template "demo-identity-server.name" . }}-persistent-storage
+              mountPath: /mnt/certs
+      volumes:
+        - name: {{ template "demo-identity-server.name" . }}-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ template "demo-identity-server.name" . }}-pv-claim
+        - name: {{ template "demo-identity-server.name" . }}-persistent-dp
+          persistentVolumeClaim:
+            claimName: {{ template "demo-identity-server.name" . }}-dp-claim
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml . | indent 8 }}

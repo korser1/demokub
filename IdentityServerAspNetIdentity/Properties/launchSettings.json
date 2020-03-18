@@ -28,7 +28,7 @@
         "callbacks__1": "https://localhost:5001/signout-callback-oidc",
         "callbacks__2": "http://localhost:4200/callback",
         "callbacks__3": "https://localhost:5021/signin-oidc",
-        "connectionStrings__defaultConnection": "Data Source=AspIdUsers.db;"
+        "connectionStrings__defaultConnection": "Server=localhost;Database=ApiDbUsers;Integrated Security=SSPI;"
       }
     }
   }
