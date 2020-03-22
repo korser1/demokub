@@ -1,0 +1,72 @@
+## Specify password for root user
+##
+## Default: random 10 character string
+# mysqlRootPassword:
+
+## Create a database user
+##
+mysqlUser: keycloak
+existingSecret: keycloak-mysql
+
+## Allow unauthenticated access, uncomment to enable
+##
+# mysqlAllowEmptyPassword: false
+
+## Create a database
+##
+mysqlDatabase: keycloak
+
+## Additionnal arguments that are passed to the MySQL container.
+## For example use --default-authentication-plugin=mysql_native_password if older clients need to
+## connect to a MySQL 8 instance.
+args: []
+
+extraVolumes: |
+  # - name: extras
+  #   emptyDir: {}
+extraVolumeMounts: |
+  # - name: extras
+  #   mountPath: /usr/share/extras
+  #   readOnly: true
+extraInitContainers: |
+  # - name: do-something
+  #   image: busybox
+  #   command: ['do', 'something']
+# Optionally specify an array of imagePullSecrets.
+# Secrets must be manually created in the namespace.
+# ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+# imagePullSecrets:
+  # - name: myRegistryKeySecretName
+
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+
+
+# Custom mysql configuration files used to override default mysql settings
+configurationFiles: {}
+#  mysql.cnf: |-
+#    [mysqld]
+#    skip-name-resolve
+#    ssl-ca=/ssl/ca.pem
+#    ssl-cert=/ssl/server-cert.pem
+#    ssl-key=/ssl/server-key.pem
+
+# Custom mysql init SQL files used to initialize the database
+initializationFiles: {}
+#  first-db.sql: |-
+#    CREATE DATABASE IF NOT EXISTS first DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+#  second-db.sql: |-
+#    CREATE DATABASE IF NOT EXISTS second DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+

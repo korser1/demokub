@@ -1,6 +1,6 @@
 Demo solution to demonstrate how to develop .Net Core applications and use them in Kubernetes cluster.
+In this branch IdentityServer4 replaced with Keycloak, see https://www.keycloak.org/
 
-Installation:
 1. install docker-desktop https://www.docker.com/products/docker-desktop or https://docs.docker.com/engine/install/ on Linux
 2. install helm 3 https://helm.sh/docs/intro/install/
 3. run init.bat / init.sh script with admin privileges
@@ -13,7 +13,6 @@ Use demo users: alice, bob. Password for both: Pass123$
 Solution content:
 
 	API: WebApi + Persistence
-	Identity Server: IdentityServerAspNetIdentity
 	Angular client: Client
 	Mobile site (blazor server): Mobile
 

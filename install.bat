@@ -5,16 +5,13 @@ cd Init
 call docker-repo.bat
 call helm-init.bat
 call ingress.bat
+call keycloak.bat
 cd ..
 
 call docker-build.bat
 
 cd Client/charts
 call client-install.bat
-cd ../../
-
-cd IdentityServerAspNetIdentity/charts
-call ids-install.bat
 cd ../../
 
 cd Mobile/charts

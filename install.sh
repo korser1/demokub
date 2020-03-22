@@ -5,16 +5,13 @@ cd Init
 ./docker-repo.sh
 ./helm-init.sh
 ./ingress.sh
+./keycloak.sh
 cd ..
 
 ./docker-build.sh
 
 cd Client/charts
 ./client-install.sh
-cd ../../
-
-cd IdentityServerAspNetIdentity/charts
-./ids-install.sh
 cd ../../
 
 cd Mobile/charts

@@ -20,13 +20,13 @@ service:
 
 env:
   - name: "authority"
-    value: "http://demo-identity-server.default.svc.cluster.local:8085"
+    value: "http://demo-identity-server-http.default.svc.cluster.local"
   - name: "identityserver"
     value: "http://ids.demo.ebt.com"
   - name: "authorizationEndpoint"
-    value: "/connect/authorize"
+    value: "/auth/realms/demo/protocol/openid-connect/auth"
   - name: "openIdConfigurationEndpoint"
-    value: "/.well-known/openid-configuration"
+    value: "/auth/realms/demo/.well-known/openid-configuration"
   - name: "audience"
     value: "api"
   - name: "clientid"
