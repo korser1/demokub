@@ -18,7 +18,7 @@
         "identityserver": "http://localhost:5010",
         "authorizationEndpoint": "/connect/authorize",
         "openIdConfigurationEndpoint": "/.well-known/openid-configuration",
-        "audience": "api1",
+        "audience": "api",
         "clientid": "mvc",
         "scope": "api1",
         "apiWeatherForecastsUrl": "https://localhost:5001/api/weatherforecasts"

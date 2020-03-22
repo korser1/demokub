@@ -50,15 +50,15 @@ export class AuthService implements OnDestroy {
         };
 
         const authWellKnownEndpoints: AuthWellKnownEndpoints = {
-            issuer: this._settings.identityServer,
-            jwks_uri: this._settings.identityServer + '/.well-known/openid-configuration/jwks',
-            authorization_endpoint: this._settings.identityServer + '/connect/authorize',
-            token_endpoint: this._settings.identityServer + '/connect/token',
-            userinfo_endpoint: this._settings.identityServer + '/connect/userinfo',
-            end_session_endpoint: this._settings.identityServer + '/connect/endsession',
-            check_session_iframe: this._settings.identityServer + '/connect/checksession',
-            revocation_endpoint: this._settings.identityServer + '/connect/revocation',
-            introspection_endpoint: this._settings.identityServer + '/connect/introspect',
+          issuer: this._settings.identityServer,
+          jwks_uri: this._settings.identityServer + this._settings.jwksuri,
+          authorization_endpoint: this._settings.identityServer + this._settings.authorizationendpoint,
+          token_endpoint: this._settings.identityServer + this._settings.tokenendpoint,
+          userinfo_endpoint: this._settings.identityServer + this._settings.userinfoendpoint,
+          end_session_endpoint: this._settings.identityServer + this._settings.endsessionendpoint,
+          check_session_iframe: this._settings.identityServer +  this._settings.checksessioniframe,
+          revocation_endpoint: this._settings.identityServer +  this._settings.revocationendpoint,
+          introspection_endpoint: this._settings.identityServer +  this._settings.introspectionendpoint,
         };
 
         this.oidcSecurityService.setupModule(openIdConfiguration, authWellKnownEndpoints);

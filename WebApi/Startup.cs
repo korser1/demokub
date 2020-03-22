@@ -79,6 +79,7 @@ namespace WebApi
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.Authority = config.Authority;
+                    options.MetadataAddress = config.Authority + config.OpenIdConfigurationEndpoint;
                     options.Audience = config.Audience;
                     options.RequireHttpsMetadata = false;
 
@@ -106,9 +107,9 @@ namespace WebApi
                         {
                             AuthorizationCode = new OpenApiOAuthFlow
                             {
-                                AuthorizationUrl = new Uri($"{config.IdentityServer}/connect/authorize", UriKind.Absolute),
-                                TokenUrl = new Uri($"{config.IdentityServer}/connect/token", UriKind.Absolute),
-                                RefreshUrl = new Uri($"{config.IdentityServer}/connect/authorize", UriKind.Absolute),
+                                AuthorizationUrl = new Uri($"{config.IdentityServer}{config.AuthorizationEndpoint}", UriKind.Absolute),
+                                TokenUrl = new Uri($"{config.IdentityServer}{config.TokenEndpoint}", UriKind.Absolute),
+                                RefreshUrl = new Uri($"{config.IdentityServer}{config.AuthorizationEndpoint}", UriKind.Absolute),
                                 Scopes = new Dictionary<string, string> {{config.Scope, "api scope"}},
                             }
                         }
@@ -181,6 +182,7 @@ namespace WebApi
                 c.OAuthConfigObject = new OAuthConfigObject
                 {
                     ClientId = config.ClientId,
+                    ClientSecret = config.ClientSecret,
                     AppName = "Swagger UI",
                     UsePkceWithAuthorizationCodeGrant = true
                 };

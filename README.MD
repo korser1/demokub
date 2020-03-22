@@ -14,6 +14,8 @@ Demo solution to demonstrate how to develop .Net Core applications and use them 
 7. open in browser http://api.demo.ebt.com/swagger
 8. open in browser http://client.demo.ebt.com
 
+Use demo users: alice, bob. Password for both: Pass123$
+
 Solution content:
 
 	API: WebApi + Persistence

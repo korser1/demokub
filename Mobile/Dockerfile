@@ -14,6 +14,6 @@ COPY Mobile/. Mobile/
 WORKDIR "/src/Mobile"
 RUN dotnet build --no-restore "Mobile.csproj" -c $BUILD_CONFIGURATION
 
-RUN echo "exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
+RUN echo "dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION" > /entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

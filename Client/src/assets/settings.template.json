@@ -3,6 +3,14 @@
   "apiServer": "$apiserver",
   "originUrl": "$origin",
   "clientid": "$clientid",
-  "scope": "$scope"
+  "scope": "$scope",
+  "jwksuri": "$jwksuri",
+  "authorizationendpoint": "$authorizationendpoint",
+  "tokenendpoint": "$tokenendpoint",
+  "userinfoendpoint": "$userinfoendpoint",
+  "endsessionendpoint": "$endsessionendpoint",
+  "checksessioniframe": "$checksessioniframe",
+  "revocationendpoint": "$revocationendpoint",
+  "introspectionendpoint": "$introspectionendpoint"
 }
 

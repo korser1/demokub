@@ -3,5 +3,13 @@
   "apiServer": "https://localhost:5001",
   "originUrl": "http://localhost:4200",
   "clientid": "mvc",
-  "scope": "api1"
+  "scope": "api1",
+  "jwksuri": "/.well-known/openid-configuration/jwks_uri",
+  "authorizationendpoint": "/connect/authorize",
+  "tokenendpoint": "/connect/token",
+  "userinfoendpoint": "/connect/userinfo",
+  "endsessionendpoint": "/connect/endsession",
+  "checksessioniframe": "/connect/checksession",
+  "revocationendpoint": "/connect/revocation",
+  "introspectionendpoint": "/connect/introspect"
 }

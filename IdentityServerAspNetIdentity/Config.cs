@@ -18,11 +18,15 @@ namespace IdentityServerAspNetIdentity
             };
 
 
-        public static IEnumerable<ApiResource> Apis(AppConfiguration config) =>
-            new List<ApiResource>
+        public static IEnumerable<ApiResource> Apis(AppConfiguration config)
+        {
+            var apiResource = new ApiResource(config.Audience, "My API");
+            apiResource.Scopes.Add(new Scope(config.Scope));
+            return new List<ApiResource>
             {
-                new ApiResource(config.Scope, "My API")
+                apiResource
             };
+        }
 
         public static IEnumerable<Client> Clients(AppConfiguration config) =>
             new List<Client>
@@ -35,7 +39,7 @@ namespace IdentityServerAspNetIdentity
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     // scopes that client has access to
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { config.Scope }
                 },
                 // interactive ASP.NET Core MVC client
                 new Client
@@ -79,7 +83,7 @@ namespace IdentityServerAspNetIdentity
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        config.Scope
                     }
                 }
             };

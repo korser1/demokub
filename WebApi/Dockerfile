@@ -16,6 +16,6 @@ COPY Persistence/. Persistence/
 WORKDIR "/src/WebApi"
 RUN dotnet build --no-restore "WebApi.csproj" -c $BUILD_CONFIGURATION
 
-RUN echo "exec dotnet run --no-build /seed --no-launch-profile -c $BUILD_CONFIGURATION -- & exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
+RUN echo "dotnet run --no-build /seed --no-launch-profile -c $BUILD_CONFIGURATION && dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION" > /entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

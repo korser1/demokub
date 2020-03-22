@@ -28,7 +28,7 @@ env:
   - name: "openIdConfigurationEndpoint"
     value: "/.well-known/openid-configuration"
   - name: "audience"
-    value: "api1"
+    value: "api"
   - name: "clientid"
     value: "mvc"
   - name: "scope"

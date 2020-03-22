@@ -9,7 +9,7 @@
         /// Internal path to identity.
         /// </summary>
         public string Authority { get; set; }
-        
+
         /// <summary>
         /// Public path to identity.
         /// </summary>
@@ -31,7 +31,7 @@
         public string ClientId { get; set; }
 
         /// <summary>
-        /// Client Secret.
+        /// Client Secret, if needed.
         /// </summary>
         public string ClientSecret { get; set; }
 
@@ -39,11 +39,10 @@
         /// Web API Scope.
         /// </summary>
         public string Scope { get; set; }
-        
+
         /// <summary>
-        /// API Endpoint. 
+        /// API Endpoint.
         /// </summary>
         public string ApiWeatherForecastsUrl { get; set; }
-
     }
 }

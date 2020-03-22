@@ -18,10 +18,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "authority": "http://localhost:5010",
         "identityserver": "http://localhost:5010",
-        "audience": "api1",
+        "audience": "api",
         "clientid": "mvc",
+        "clientSecret": "",
         "scope": "api1",
-        "connectionStrings__defaultConnection": "Data Source=WeatherDb.db;"
+        "connectionStrings__defaultConnection": "Data Source=WeatherDb.db;",
+        "openIdConfigurationEndpoint": "/.well-known/openid-configuration",
+        "authorizationEndpoint" : "/connect/authorize",
+        "tokenEndpoint": "/connect/token"
       }
     }
   }

@@ -19,26 +19,17 @@ service:
   port: 8085
 
 env:
-  - name: "clientid"
-    value: "mvc"
-  - name: "clientsecret"
-    value: "secret"
-  - name: "scope"
-    value: "api1"
-  - name: "redirects__0"
-    value: "http://api.demo.ebt.com/swagger/oauth2-redirect.html"
-  - name: "redirects__1"
-    value: "http://client.demo.ebt.com/callback"
-  - name: "redirects__2"
-    value: "http://mobile.demo.ebt.com/signin-oidc"
-  - name: "callbacks__0"
-    value: "https://api.demo.ebt.com/signout-callback-oidc"
-  - name: "callbacks__1"
-    value: "http://client.demo.ebt.com/callback"
-  - name: "callbacks__2"
-    value: "http://mobile.demo.ebt.com/signin-oidc"
-  - name: "connectionStrings__defaultConnection"
-    value: "Data Source=AspIdUsers.db;"
+  clientid: "mvc"
+  clientsecret: ""
+  audience: "api"
+  scope: "api1"
+  redirects__0: "http://api.demo.ebt.com/swagger/oauth2-redirect.html"
+  redirects__1: "http://client.demo.ebt.com/callback"
+  redirects__2: "http://mobile.demo.ebt.com/signin-oidc"
+  callbacks__0: "https://api.demo.ebt.com/signout-callback-oidc"
+  callbacks__1: "http://client.demo.ebt.com/callback"
+  callbacks__2: "http://mobile.demo.ebt.com/signin-oidc"
+  connectionStrings__defaultConnection: "Data Source=AspIdUsers.db;"
 
 ingress:
   enabled: true

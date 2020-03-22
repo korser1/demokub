@@ -31,7 +31,7 @@ namespace Mobile
         {
             services.Configure<AppConfiguration>(Configuration);
             AppConfiguration config = Configuration.Get<AppConfiguration>();
-            
+
             services.AddCors(o => o
                 .AddDefaultPolicy(b => b
                     .AllowAnyOrigin()
@@ -61,8 +61,9 @@ namespace Mobile
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
                     options.Authority = config.IdentityServer;
+                    options.MetadataAddress = config.IdentityServer + config.OpenIdConfigurationEndpoint;
                     options.UseTokenLifetime = true;
-                    
+
                     options.ClientId = config.ClientId;
                     options.ClientSecret = config.ClientSecret;
                     options.RequireHttpsMetadata = false;
@@ -79,6 +80,7 @@ namespace Mobile
                     options.CallbackPath = new PathString("/signin-" + Constants.OpenIdScheme);
 
                     IdentityModelEventSource.ShowPII = true;
+                    options.TokenValidationParameters.ValidateIssuer = false;
                     options.SaveTokens = true;
 
                     options.Events = new OpenIdConnectEvents
