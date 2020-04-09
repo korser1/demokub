@@ -49,7 +49,7 @@ namespace WebApi
         {
             services.Configure<AppConfiguration>(Configuration);
             AppConfiguration config = Configuration.Get<AppConfiguration>();
-            
+
             services.AddCors(o => o
                 .AddDefaultPolicy(b => b
                     .AllowAnyOrigin()

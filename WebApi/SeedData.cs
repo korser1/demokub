@@ -7,8 +7,15 @@ using Serilog;
 
 namespace WebApi
 {
-    public class SeedData
+    /// <summary>
+    /// Implements data seeding.
+    /// </summary>
+    public static class SeedData
     {
+        /// <summary>
+        /// Seeds random data.
+        /// </summary>
+        /// <param name="connectionString"></param>
         public static void EnsureSeedData(string connectionString)
         {
             var services = new ServiceCollection();
@@ -31,7 +38,7 @@ namespace WebApi
                     TemperatureC = rnd.Next(-20, 55),
                     Summary = Summaries[rnd.Next(Summaries.Length)]
                 });
-                        
+
                 context.WeatherForecasts.AddRange(forecasts);
                 context.SaveChanges();
 
@@ -42,8 +49,9 @@ namespace WebApi
                 Log.Debug("data already exists!");
             }
         }
-        
-        private static readonly string[] Summaries = {
+
+        private static readonly string[] Summaries =
+        {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
     }

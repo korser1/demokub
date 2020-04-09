@@ -7,8 +7,16 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Mobile
 {
+    /// <summary>
+    /// Program class.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Entry point.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static int Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -43,6 +51,11 @@ namespace Mobile
             }
         }
 
+        /// <summary>
+        /// Creates host.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

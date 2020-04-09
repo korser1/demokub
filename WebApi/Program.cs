@@ -79,7 +79,7 @@ namespace WebApi
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
-                    webBuilder.ConfigureAppConfiguration(c => 
+                    webBuilder.ConfigureAppConfiguration(c =>
                         c.AddEnvironmentVariables().AddCommandLine(args)
                     );
                 });
