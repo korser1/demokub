@@ -14,6 +14,7 @@
       "applicationUrl": "https://localhost:5021;http://localhost:5020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "AllowedHosts": "*",
         "authority": "http://localhost:5010",
         "identityserver": "http://localhost:5010",
         "authorizationEndpoint": "/connect/authorize",

@@ -16,6 +16,7 @@
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "AllowedHosts": "*",
         "authority": "http://localhost:5010",
         "identityserver": "http://localhost:5010",
         "audience": "api",

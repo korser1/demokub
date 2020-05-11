@@ -35,6 +35,8 @@ env:
     value: "api1"
   - name: "apiWeatherForecastsUrl"
     value: "http://demo-web-api.default.svc.cluster.local:8084/api/weatherforecasts"
+  - name: "allowedHosts"
+    value: "*"
 
 ingress:
   enabled: true

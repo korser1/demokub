@@ -37,6 +37,8 @@ env:
     value: "/connect/token"
   - name: "connectionStrings__defaultConnection"
     value: "Data Source=/mnt/storage/WeatherDb.db;"
+  - name: "allowedHosts"
+    value: "*"
 
 ingress:
   enabled: true
