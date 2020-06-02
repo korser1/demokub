@@ -4,7 +4,7 @@
   "originUrl": "http://localhost:4200",
   "clientid": "mvc",
   "scope": "api1",
-  "jwksuri": "/.well-known/openid-configuration/jwks_uri",
+  "jwksuri": "/.well-known/openid-configuration/jwks",
   "authorizationendpoint": "/connect/authorize",
   "tokenendpoint": "/connect/token",
   "userinfoendpoint": "/connect/userinfo",
