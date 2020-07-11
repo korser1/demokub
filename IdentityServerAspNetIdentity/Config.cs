@@ -17,14 +17,22 @@ namespace IdentityServerAspNetIdentity
                 new IdentityResources.Profile(),
             };
 
-
         public static IEnumerable<ApiResource> Apis(AppConfiguration config)
         {
             var apiResource = new ApiResource(config.Audience, "My API");
-            apiResource.Scopes.Add(new Scope(config.Scope));
+            apiResource.Scopes.Add(config.Scope);
             return new List<ApiResource>
             {
                 apiResource
+            };
+        }
+
+        public static IEnumerable<ApiScope> Scopes(AppConfiguration config)
+        {
+            var apiScope = new ApiScope(config.Scope);
+            return new List<ApiScope>
+            {
+                apiScope
             };
         }
 

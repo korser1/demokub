@@ -59,6 +59,7 @@ namespace IdentityServerAspNetIdentity
                     options.Events.RaiseSuccessEvents = true;
                 })
                 .AddInMemoryIdentityResources(Config.Ids)
+                .AddInMemoryApiScopes(Config.Scopes(config))
                 .AddInMemoryApiResources(Config.Apis(config))
                 .AddInMemoryClients(Config.Clients(config))
                 .AddAspNetIdentity<ApplicationUser>();
