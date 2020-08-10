@@ -1,0 +1,104 @@
+name: api to azure
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@master
+    
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create ACR
+      id: create-acr
+      run: |
+        az acr create -n korserDemo -g demo-aks --location "East US" --sku Standard --admin-enabled
+        echo "::set-output name=acr_username::`az acr credential show -n korserDemo --query username | xargs`"
+        echo "::set-output name=acr_password::`az acr credential show -n korserDemo --query passwords[0].value | xargs`"
+        echo "::add-mask::`az acr credential show -n korserDemo --query passwords[0].value | xargs`"
+    - uses: azure/docker-login@v1
+      with:
+        login-server: korserdemo.azurecr.io
+        username: ${{ steps.create-acr.outputs.acr_username }}
+        password: ${{ steps.create-acr.outputs.acr_password }}
+
+    - name: Build and push api image to ACR
+      id: build-image-api
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "WebApi/Dockerfile" -t korserdemo.azurecr.io/apirepo:${{ github.sha }} -t korserdemo.azurecr.io/apirepo:latest
+        docker push korserdemo.azurecr.io/apirepo:${{ github.sha }}
+        docker push korserdemo.azurecr.io/apirepo:latest
+
+    - name: Build and push client image to ACR
+      id: build-image-client
+      run: |
+        cd Client
+        docker build "$GITHUB_WORKSPACE/Client" -f "Dockerfile" -t korserdemo.azurecr.io/clientrepo:${{ github.sha }} -t korserdemo.azurecr.io/clientrepo:latest
+        docker push korserdemo.azurecr.io/clientrepo:${{ github.sha }}
+        docker push korserdemo.azurecr.io/clientrepo:latest
+        cd ..
+
+    - name: Build and push ids image to ACR
+      id: build-image-ids
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "IdentityServerAspNetIdentity/Dockerfile" -t korserdemo.azurecr.io/idsrepo:${{ github.sha }} -t korserdemo.azurecr.io/idsrepo:latest
+        docker push korserdemo.azurecr.io/idsrepo:${{ github.sha }}
+        docker push korserdemo.azurecr.io/idsrepo:latest
+
+    - name: Build and push mobile image to ACR
+      id: build-image-mobile
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Mobile/Dockerfile" -t korserdemo.azurecr.io/mobilerepo:${{ github.sha }} -t korserdemo.azurecr.io/mobilerepo:latest
+        docker push korserdemo.azurecr.io/mobilerepo:${{ github.sha }}
+        docker push korserdemo.azurecr.io/mobilerepo:latest
+
+    - uses: azure/k8s-set-context@v1
+      id: login
+      with:
+         kubeconfig: ${{ secrets.aks_demo_kubeConfig }}
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep demospace | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace demospace`
+        fi
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: demospace
+        container-registry-url: korserdemo.azurecr.io
+        container-registry-username: ${{ steps.create-acr.outputs.acr_username }}
+        container-registry-password: ${{ steps.create-acr.outputs.acr_password }}
+        secret-name: repodockerauth
+
+    - name: create secret helm compatible
+      run: |
+        secretPresent=`kubectl get secret acr-secret --namespace=demospace | wc -l`
+        if [ $secretPresent -ne 0 ]
+        then
+            kubectl delete secret --namespace=demospace acr-secret
+        fi
+        kubectl create secret --namespace=demospace docker-registry acr-secret \
+                              --docker-server=korserdemo.azurecr.io \
+                              --docker-username=${{ steps.create-acr.outputs.acr_username }} \
+                              --docker-password=${{ steps.create-acr.outputs.acr_password }} \
+                              --docker-email=korser1@gmail.com
+
+    - name: install api helm chart
+      run: |
+        helm upgrade --install api --reset-values --namespace demospace WebApi/charts/demo-web-api -f azure/api-values.yaml
+
+    - name: install client helm chart
+      run: |
+        helm upgrade --install client --reset-values --namespace demospace Client/charts/demo-angular-client -f azure/client-values.yaml
+
+    - name: install ids helm chart
+      run: |
+        helm upgrade --install ids --reset-values --namespace demospace IdentityServerAspNetIdentity/charts/demo-identity-server -f azure/ids-values.yaml
+
+    - name: install mobile helm chart
+      run: |
+        helm upgrade --install mobile --reset-values --namespace demospace Mobile/charts/demo-mobile-site -f azure/mobile-values.yaml

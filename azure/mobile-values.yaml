@@ -1,0 +1,86 @@
+# Default values for demo-mobile-site.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+fullnameOverride: demo-mobile-site
+replicaCount: 2
+image:
+  repository: korserdemo.azurecr.io/mobilerepo
+  tag: latest
+  pullPolicy: Always
+imagePullSecrets:
+  - name : acr-secret
+  # Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  #
+  # This uses credentials from secret "myRegistryKeySecretName".
+  # - name: myRegistryKeySecretName
+service:
+  type: ClusterIP
+  port: 8086
+
+env:
+  - name: "authority"
+    value: "http://demo-identity-server:8085"
+  - name: "identityserver"
+    value: "http://ids.ff6938f588d94c8381e0.eastus.aksapp.io"
+  - name: "authorizationEndpoint"
+    value: "/connect/authorize"
+  - name: "openIdConfigurationEndpoint"
+    value: "/.well-known/openid-configuration"
+  - name: "audience"
+    value: "api"
+  - name: "clientid"
+    value: "mvc"
+  - name: "scope"
+    value: "api1"
+  - name: "apiWeatherForecastsUrl"
+    value: "http://demo-web-api:8084/api/weatherforecasts"
+  - name: "allowedHosts"
+    value: "*"
+
+ingress:
+  enabled: true
+  annotations:
+    # ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"    
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    kubernetes.io/ingress.class: addon-http-application-routing
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - mobile.ff6938f588d94c8381e0.eastus.aksapp.io
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+secrets: {}
+  # Optionally specify a set of secret objects whose values
+  # will be injected as environment variables by default.
+  # You should add this section to a file like secrets.yaml
+  # that is explicitly NOT committed to source code control
+  # and then include it as part of your helm install step.
+  # ref: https://kubernetes.io/docs/concepts/configuration/secret/
+  #
+  # This creates a secret "mysecret" and injects "mypassword"
+  # as the environment variable mysecret_mypassword=password.
+  # mysecret:
+  #   mypassword: password
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
