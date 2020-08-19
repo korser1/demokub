@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -51,14 +51,21 @@ namespace IdentityServerAspNetIdentity
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
+            });
             var builder = services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
+
+                    // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
+                    options.EmitStaticAudienceClaim = true;
                 })
-                .AddInMemoryIdentityResources(Config.Ids)
+                .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiScopes(Config.Scopes(config))
                 .AddInMemoryApiResources(Config.Apis(config))
                 .AddInMemoryClients(Config.Clients(config))
@@ -67,7 +74,6 @@ namespace IdentityServerAspNetIdentity
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
 
-            services.AddAuthentication();
             services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
         }
 
@@ -84,6 +90,7 @@ namespace IdentityServerAspNetIdentity
 
             app.UseRouting();
             app.UseIdentityServer();
+            app.UseCookiePolicy();
             app.UseAuthorization();
             app.UseHealthChecks(new PathString("/healthz"), new HealthCheckOptions {AllowCachingResponses = false});
             app.UseEndpoints(endpoints =>
