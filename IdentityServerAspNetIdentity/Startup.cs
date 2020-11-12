@@ -73,6 +73,7 @@ namespace IdentityServerAspNetIdentity
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
         }
@@ -83,7 +84,7 @@ namespace IdentityServerAspNetIdentity
             {
                 app.UseCors();
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
 
             app.UseStaticFiles();

@@ -139,6 +139,7 @@ namespace WebApi
                 }
             });
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddAuthorization();
             services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
             services.AddMvc();
@@ -159,7 +160,7 @@ namespace WebApi
             {
                 app.UseCors();
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
                 dbContext.Database.EnsureCreated();
             }
 
