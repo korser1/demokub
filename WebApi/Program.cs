@@ -49,7 +49,7 @@ namespace WebApi
                     var config = host.Services.GetRequiredService<IConfiguration>();
                     var connectionString = config.GetConnectionString("DefaultConnection");
                     SeedData.EnsureSeedData(connectionString);
-                    Log.Information("Done seeding database.");
+                    Log.Information("Done seeding database");
                     return 0;
                 }
 
@@ -59,7 +59,7 @@ namespace WebApi
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly.");
+                Log.Fatal(ex, "Host terminated unexpectedly");
                 return 1;
             }
             finally

@@ -42,7 +42,7 @@ namespace Mobile
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly.");
+                Log.Fatal(ex, "Host terminated unexpectedly");
                 return 1;
             }
             finally
