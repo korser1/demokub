@@ -17,7 +17,7 @@ export class SettingsHttpService {
           .toPromise()
           .then(response => {
               this.settingsService.settings = <Settings>response;
-              resolve();
+              resolve(true);
             }
           )
       }

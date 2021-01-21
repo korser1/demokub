@@ -1,6 +1,6 @@
-FROM node:alpine3.11 as builder
+FROM node:alpine3.14 as builder
 
-RUN apk update && apk add python make g++
+RUN apk update && apk add make g++
 
 COPY package.json package-lock.json ./
 
@@ -18,7 +18,7 @@ RUN npm run build --prod --output-path=dist
 
 ### STAGE 2: Setup ###
 
-FROM nginx:alpine
+FROM nginx:1.21.3-alpine
 
 ## Copy our default nginx config
 COPY nginx/default.conf /etc/nginx/conf.d/

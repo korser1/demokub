@@ -1,9 +1,15 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { OidcSecurityService, OpenIdConfiguration, AuthWellKnownEndpoints, AuthorizationResult, AuthorizationState } from 'angular-auth-oidc-client';
-import { Observable ,  Subscription, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {Injectable, OnDestroy} from '@angular/core';
+import {
+  AuthorizationResult,
+  AuthorizationState,
+  AuthWellKnownEndpoints,
+  OidcSecurityService,
+  OpenIdConfiguration
+} from 'angular-auth-oidc-client';
+import {Observable, Subscription, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
 import {SettingsService} from "../services/settings.service";
 import {Settings} from "../settings";
 
@@ -156,8 +162,7 @@ export class AuthService implements OnDestroy {
     }
 
     public getToken() {
-        const token = this.oidcSecurityService.getToken();
-        return token;
+      return this.oidcSecurityService.getToken();
     }
 
     private appendAuthHeader(headers: HttpHeaders) {

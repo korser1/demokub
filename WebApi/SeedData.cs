@@ -42,7 +42,7 @@ namespace WebApi
                 context.WeatherForecasts.AddRange(forecasts);
                 context.SaveChanges();
 
-                Log.Debug("created records: " + context.WeatherForecasts.Count());
+                Log.Debug("created records: {Count}", context.WeatherForecasts.Count());
             }
             else
             {
