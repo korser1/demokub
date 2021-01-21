@@ -31,13 +31,13 @@ export function app_Init(settingsHttpService: SettingsHttpService) {
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'unauthorized', component: UnauthorizedComponent },
-      { path: 'forbidden', component: UnauthorizedComponent },
-      { path: '**', redirectTo: '' }
-    ]),
+    { path: '', component: HomeComponent, pathMatch: 'full' },
+    { path: 'counter', component: CounterComponent },
+    { path: 'fetch-data', component: FetchDataComponent },
+    { path: 'unauthorized', component: UnauthorizedComponent },
+    { path: 'forbidden', component: UnauthorizedComponent },
+    { path: '**', redirectTo: '' }
+], { relativeLinkResolution: 'legacy' }),
     CoreModule
   ],
   providers: [ { provide: APP_INITIALIZER, useFactory: app_Init, deps: [SettingsHttpService], multi: true }],
