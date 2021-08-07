@@ -18,7 +18,7 @@ RUN npm run build --prod --output-path=dist
 
 ### STAGE 2: Setup ###
 
-FROM nginx:alpine
+FROM nginx:1.21-alpine
 
 ## Copy our default nginx config
 COPY nginx/default.conf /etc/nginx/conf.d/
