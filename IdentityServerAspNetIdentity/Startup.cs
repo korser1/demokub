@@ -6,7 +6,6 @@ using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,21 +16,14 @@ using Microsoft.Extensions.Hosting;
 
 namespace IdentityServerAspNetIdentity
 {
-    public class Startup
+    public static class Startup
     {
-        public IWebHostEnvironment Environment { get; }
-        public IConfiguration Configuration { get; }
-
-        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
+        public static void ConfigureServices(WebApplicationBuilder builder)
         {
-            Environment = environment;
-            Configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.Configure<AppConfiguration>(Configuration);
-            AppConfiguration config = Configuration.Get<AppConfiguration>();
+            var services = builder.Services;
+            var configuration = builder.Configuration;
+            services.Configure<AppConfiguration>(configuration);
+            AppConfiguration config = configuration.Get<AppConfiguration>();
 
             services.AddCors(o => o
                 .AddDefaultPolicy(b => b
@@ -44,7 +36,7 @@ namespace IdentityServerAspNetIdentity
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.EnableDetailedErrors().EnableSensitiveDataLogging();
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -55,7 +47,7 @@ namespace IdentityServerAspNetIdentity
             {
                 options.MinimumSameSitePolicy = SameSiteMode.Lax;
             });
-            var builder = services.AddIdentityServer(options =>
+            var identityServer = services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
@@ -72,15 +64,15 @@ namespace IdentityServerAspNetIdentity
                 .AddAspNetIdentity<ApplicationUser>();
 
             // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
+            identityServer.AddDeveloperSigningCredential();
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
         }
 
-        public void Configure(IApplicationBuilder app)
+        public static void Configure(WebApplication app)
         {
-            if (Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseCors();
                 app.UseDeveloperExceptionPage();
@@ -94,10 +86,7 @@ namespace IdentityServerAspNetIdentity
             app.UseCookiePolicy();
             app.UseAuthorization();
             app.UseHealthChecks(new PathString("/healthz"), new HealthCheckOptions {AllowCachingResponses = false});
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
+            app.MapDefaultControllerRoute();
         }
     }
 }

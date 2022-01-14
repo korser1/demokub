@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,21 +15,16 @@ using Mobile.Data;
 
 namespace Mobile
 {
-    public class Startup
+    public static class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(WebApplicationBuilder builder)
         {
-            services.Configure<AppConfiguration>(Configuration);
-            AppConfiguration config = Configuration.Get<AppConfiguration>();
+            var services = builder.Services;
+            var configuration = builder.Configuration;
+            services.Configure<AppConfiguration>(configuration);
+            AppConfiguration config = configuration.Get<AppConfiguration>();
 
             services.AddCors(o => o
                 .AddDefaultPolicy(b => b
@@ -107,9 +101,9 @@ namespace Mobile
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(WebApplication app)
         {
-            if (env.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseCors();
                 app.UseDeveloperExceptionPage();

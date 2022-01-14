@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine
 ARG BUILD_CONFIGURATION=Debug
 ENV ASPNETCORE_ENVIRONMENT=Development
 ENV DOTNET_USE_POLLING_FILE_WATCHER=true
@@ -16,4 +16,4 @@ RUN dotnet build --no-restore "IdentityServerAspNetIdentity.csproj" -c $BUILD_CO
 
 RUN echo "dotnet run --no-build /seed --no-launch-profile -c $BUILD_CONFIGURATION && dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION" > /entrypoint.sh
 
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,30 +24,18 @@ namespace WebApi
     /// <summary>
     /// Startup class.
     /// </summary>
-    public class Startup
+    public static class Startup
     {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        /// <summary>
-        /// Configuration interface.
-        /// </summary>
-        public IConfiguration Configuration { get; }
-
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureServices(IServiceCollection services)
+        /// <param name="builder"></param>
+        public static void ConfigureServices(WebApplicationBuilder builder)
         {
-            services.Configure<AppConfiguration>(Configuration);
-            AppConfiguration config = Configuration.Get<AppConfiguration>();
+            var services = builder.Services;
+            var configuration = builder.Configuration;
+            services.Configure<AppConfiguration>(configuration);
+            AppConfiguration config = configuration.Get<AppConfiguration>();
 
             services.AddCors(o => o
                 .AddDefaultPolicy(b => b
@@ -59,7 +46,7 @@ namespace WebApi
             services.AddDbContext<DemoDbContext>(opt =>
             {
                 opt.EnableDetailedErrors().EnableSensitiveDataLogging();
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddControllers();
 
@@ -149,18 +136,19 @@ namespace WebApi
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="appConfigurationOptions"></param>
-        /// <param name="dbContext"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            IOptions<AppConfiguration> appConfigurationOptions, DemoDbContext dbContext)
+        public static void Configure(WebApplication app)
         {
+            IOptions<AppConfiguration> appConfigurationOptions = app.Services.GetRequiredService<IOptions<AppConfiguration>>();
+
             var config = appConfigurationOptions.Value;
-            if (env.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseCors();
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+
+                using var scope = app.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<DemoDbContext>();
                 dbContext.Database.EnsureCreated();
             }
 
@@ -192,10 +180,7 @@ namespace WebApi
             });
 
             app.UseHealthChecks(new PathString("/healthz"), new HealthCheckOptions {AllowCachingResponses = false});
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.MapControllers();
         }
     }
 }
