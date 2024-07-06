@@ -1,4 +1,4 @@
-FROM node:alpine3.15 as builder
+FROM node:alpine3.20 as builder
 
 RUN apk update && apk add make g++
 
@@ -18,7 +18,7 @@ RUN npm run build --prod --output-path=dist
 
 ### STAGE 2: Setup ###
 
-FROM nginx:1.23.1-alpine
+FROM nginx:1.27.0-alpine
 
 ## Copy our default nginx config
 COPY nginx/default.conf /etc/nginx/conf.d/

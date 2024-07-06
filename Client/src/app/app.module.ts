@@ -37,7 +37,7 @@ export function app_Init(settingsHttpService: SettingsHttpService) {
     { path: 'unauthorized', component: UnauthorizedComponent },
     { path: 'forbidden', component: UnauthorizedComponent },
     { path: '**', redirectTo: '' }
-], { relativeLinkResolution: 'legacy' }),
+], {}),
     CoreModule
   ],
   providers: [ { provide: APP_INITIALIZER, useFactory: app_Init, deps: [SettingsHttpService], multi: true }],
